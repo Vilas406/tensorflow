@@ -1,0 +1,23 @@
+import numpy as np
+import tensorflow as tf
+from sklearn.datasets import fetch_california_housing
+
+# Fetch dataset
+housing = fetch_california_housing()
+m, n = housing.data.shape
+
+# Add bias term to the data
+housing_data_plus_bias = np.c_[np.ones((m, 1)), housing.data]
+
+# Convert data to TensorFlow constants
+X = tf.constant(housing_data_plus_bias, dtype=tf.float32, name="X")
+y = tf.constant(housing.target.reshape(-1, 1), dtype=tf.float32, name="y")
+
+# Perform normal equation for theta (weights)
+XT = tf.transpose(X)
+theta = tf.linalg.inv(XT @ X) @ XT @ y
+
+# Evaluate the result (in TensorFlow 2.x, this is done directly)
+theta_value = theta.numpy()
+
+print(theta_value)
